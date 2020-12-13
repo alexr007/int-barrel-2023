@@ -1,4 +1,4 @@
-### barrel2019
+### barrel2020
 This application is used to maintain water pressure in a given range.  
 
 System can operate in automatic and manual modes.
@@ -39,3 +39,7 @@ The system starts in **automatic** mode with thresholds **1.8** / **3.8** Pa
 ### Links
 - project based on [barrel2018](https://github.com/alexr007/barrel2018)
 - Arduino official [site](https://www.arduino.cc/en/main/software)
+
+### pin-out
+
+- [general](https://www.circuito.io/blog/arduino-uno-pinout/)
