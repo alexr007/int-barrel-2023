@@ -42,4 +42,5 @@ The system starts in **automatic** mode with thresholds **1.8** / **3.8** Pa
 
 ### pin-out
 
-- [general](https://www.circuito.io/blog/arduino-uno-pinout/)
+- [arduino uno](https://www.circuito.io/blog/arduino-uno-pinout/)
+- [lcd shield](https://wiki.keyestudio.com/images/thumb/5/51/Ks0256_pinout.jpg/800px-Ks0256_pinout.jpg)
