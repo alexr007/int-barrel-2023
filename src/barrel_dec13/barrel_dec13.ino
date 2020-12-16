@@ -27,6 +27,9 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7); // D
 #define PORT_RELAY_PUMP 11      // D swichON=LOW, OFF=HIGH
 #define PORT_BARREL_IS_EMPTY 12 // D closed - OK, open - EMPTY
 
+#define EMPTY_LINE      "                "
+#define BARREL_IS_EMPTY "BARREL IS EMPTY!"
+
 int pressure_low;               // 100 - 400
 int pressure_high;              // 100 - 400
 int pressure_low_volt;          // 0 - 1023
@@ -256,19 +259,23 @@ void displayLine1() {
   lcd.print(getLine1Contents());
 }
 
+String represent(bool val) {
+  return val ? "*" : " ";
+}
+
 void displayLine2() {
   lcd.setCursor(0,1);
 
   if (isEmpty) {
-    lcd.print("BARREL IS EMPTY!");
+    lcd.print(BARREL_IS_EMPTY);
     return;
   }
 
-  lcd.print("                ");
+  lcd.print(EMPTY_LINE);
   lcd.setCursor(2,1);
-  lcd.print(current_position == PRESS_LOW ? "*" : " ");
+  lcd.print(represent(current_position == PRESS_LOW));
   lcd.setCursor(7,1);
-  lcd.print(current_position == PRESS_HIGH ? "*" : " ");
+  lcd.print(represent(current_position == PRESS_HIGH));
   lcd.setCursor(9,1);
   lcd.print(getLine2Contents());
 }
@@ -308,5 +315,5 @@ void loop() {
     }
     case btnNONE: controlPressure();
  }
-  delay(200);
+  delay(100);
 }
