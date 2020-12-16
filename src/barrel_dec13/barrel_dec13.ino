@@ -36,6 +36,7 @@ int pressure_current_volt;
 
 int current_position;           // PRESS_LOW (LEFT) / PRESS_HIGH (RIGHT)
 bool isRelayOn;
+bool isEmpty;                   // current state of "empty"
 
 // used to 'mute' the sensor, if low=high we don't use the sensor's value for relay control.
 bool useSensor;
@@ -81,6 +82,7 @@ int press_to_volt(int pres) {
 
 void setup() {
   pinMode(PORT_RELAY_PUMP, OUTPUT);
+  pinMode(PORT_BARREL_IS_EMPTY, INPUT);
   // swith pull up resistor to avoid unexpected behavior without sensor
   digitalWrite(PORT_PRESSURE_SENSOR, HIGH);
   lcd.begin(16, 2);
@@ -88,6 +90,7 @@ void setup() {
   pressure_high = DEFAULT_MAX_VALUE;
   current_position = PRESS_HIGH;
   useSensor = true;
+  isEmpty = true;   // by default barrel is empty
   switchRelayOff();
   update_pressures_volt();
 }
@@ -98,16 +101,22 @@ void setup() {
 
 int read_button() {
   int in = analogRead(0); // 0 - port, which used to read buttons
-  if (in < 50)   return btnRIGHT;  // 0
-  if (in < 150)  return btnUP;     // 97
-  if (in < 300)  return btnDOWN;   // 253
-  if (in < 450)  return btnLEFT;   // 405
-  if (in < 700)  return btnSELECT; // 638
+  if (in < 50)  return btnRIGHT;  // 0
+  if (in < 150) return btnUP;     // 97
+  if (in < 300) return btnDOWN;   // 253
+  if (in < 450) return btnLEFT;   // 405
+  if (in < 700) return btnSELECT; // 638
   return btnNONE;
 }
 
 int read_pressure() {
   return analogRead(PORT_PRESSURE_SENSOR);
+}
+
+// HIGH = we are in open  position and pulled-up to +5V
+// LOW  = we are in close position and short-circuited to the GROUND
+bool read_is_empty() {
+  return digitalRead(PORT_BARREL_IS_EMPTY) == HIGH;
 }
 
 /////////////////////////////////////////////////////////
@@ -200,6 +209,13 @@ void switchRelayOff() {
 
 void controlPressure() {
   pressure_current_volt = read_pressure();
+  isEmpty = read_is_empty();
+
+  if (isEmpty) {
+    switchRelayOff();
+    return;
+  }
+
   if (!useSensor) return;
   
   if (pressure_current_volt >= pressure_high_volt) {
@@ -241,6 +257,14 @@ void displayLine1() {
 }
 
 void displayLine2() {
+  lcd.setCursor(0,1);
+
+  if (isEmpty) {
+    lcd.print("BARREL IS EMPTY!");
+    return;
+  }
+
+  lcd.print("                ");
   lcd.setCursor(2,1);
   lcd.print(current_position == PRESS_LOW ? "*" : " ");
   lcd.setCursor(7,1);
