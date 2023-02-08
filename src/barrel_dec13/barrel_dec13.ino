@@ -30,6 +30,8 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7); // D
 #define EMPTY_LINE      "                "
 #define BARREL_IS_EMPTY "BARREL IS EMPTY!"
 
+#include "liveness.h"
+
 int pressure_low;               // 100 - 400
 int pressure_high;              // 100 - 400
 int pressure_low_volt;          // 0 - 1023
@@ -84,6 +86,7 @@ int press_to_volt(int pres) {
 /////////////////////////////////////////////////////////
 
 void setup() {
+  digitalWrite(PORT_RELAY_PUMP, HIGH);
   pinMode(PORT_RELAY_PUMP, OUTPUT);
   pinMode(PORT_BARREL_IS_EMPTY, INPUT);
   // swith pull up resistor to avoid unexpected behavior without sensor
@@ -272,6 +275,8 @@ void displayLine2() {
   }
 
   lcd.print(EMPTY_LINE);
+  lcd.setCursor(0,1);
+  lcd.print(liveness_char());
   lcd.setCursor(2,1);
   lcd.print(represent(current_position == PRESS_LOW));
   lcd.setCursor(7,1);
@@ -315,5 +320,5 @@ void loop() {
     }
     case btnNONE: controlPressure();
  }
-  delay(100);
+  delay(200);
 }
