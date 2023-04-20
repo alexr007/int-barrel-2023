@@ -17,8 +17,8 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7); // D
 
 #define MIN_VALUE 100           // min acceptable pressure to setup 1.00
 #define MAX_VALUE 400           // max acceptable pressure to setup 4.00
-#define DEFAULT_MIN_VALUE 200   // min after swith on
-#define DEFAULT_MAX_VALUE 300   // max after switch on
+#define DEFAULT_MIN_VALUE 230   // min after switch on
+#define DEFAULT_MAX_VALUE 330   // max after switch off
 #define PRESS_LOW 1             // left position
 #define PRESS_HIGH 2            // right position
 #define DELTA 10                // 0.1 delta
